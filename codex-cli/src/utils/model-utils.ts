@@ -28,14 +28,22 @@ async function fetchModels(): Promise<Array<string>> {
     return RECOMMENDED_MODELS;
   }
 
-  // For Azure deployments, only the configured deployment is supported
+  // For Azure OpenAI: list is not available via the standard API, so fall back to a manual list
   const useAzure =
     AZURE_OPENAI_ENDPOINT &&
     AZURE_OPENAI_API_KEY &&
     AZURE_OPENAI_API_VERSION &&
     AZURE_OPENAI_DEPLOYMENT_NAME;
   if (useAzure) {
-    return [AZURE_OPENAI_DEPLOYMENT_NAME];
+    // Return a static list of known Azure-deployed models when listing is not supported
+    return [
+      "gpt-35-turbo-16k",
+      "gpt-4o",
+      "gpt-4o-mini",
+      "gpt-4.1",
+      "gpt-4.1-mini",
+      "o4-mini",
+    ];
   }
   try {
     const openai = new OpenAI({
